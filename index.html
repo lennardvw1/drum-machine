@@ -9,41 +9,55 @@
   <body>
     <div class="app-shell">
       <header class="topbar">
-        <div>
-          <p class="eyebrow">Beat Builder</p>
-          <h1>Drum Machine</h1>
+        <div class="title-group">
+          <div>
+            <p class="eyebrow">Beat Builder</p>
+            <h1>Drum Machine</h1>
+          </div>
+          <button id="play-button" class="play-button" type="button">Play</button>
         </div>
 
         <div class="controls">
-          <button id="play-button" class="play-button" type="button">Play</button>
-          <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Switch to dark mode" title="Switch theme">☾</button>
-
-          <label class="tempo-control" for="tempo">
-            <span>BPM</span>
-            <input id="tempo" type="range" min="60" max="180" value="110" />
-            <output id="tempo-value" for="tempo">110</output>
-          </label>
-
-          <div class="length-group">
-            <label class="length-control" for="track-length">
-              <span>Steps</span>
-              <input id="track-length" type="range" min="8" max="64" step="4" value="16" />
-              <output id="track-length-value" for="track-length">16</output>
-            </label>
-
-            <div class="length-preset-row" aria-label="Pattern length presets">
-              <button class="length-preset" type="button" data-length="8">8</button>
-              <button class="length-preset active" type="button" data-length="16">16</button>
-              <button class="length-preset" type="button" data-length="32">32</button>
-              <button class="length-preset" type="button" data-length="64">64</button>
-            </div>
+          <div class="control-actions">
+            <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Switch to dark mode" title="Switch theme">☾</button>
           </div>
 
-          <label class="swing-control" for="swing">
-            <span>Swing</span>
-            <input id="swing" type="range" min="0" max="50" value="0" />
-            <output id="swing-value" for="swing">0%</output>
-          </label>
+          <div class="slider-stack">
+            <label class="tempo-control" for="tempo">
+              <span>BPM</span>
+              <input id="tempo" type="range" min="60" max="180" value="110" />
+              <output id="tempo-value" for="tempo">110</output>
+            </label>
+
+            <div class="length-group">
+              <label class="length-control" for="track-length">
+                <span>Steps</span>
+                <input id="track-length" type="range" min="8" max="64" step="4" value="16" />
+                <output id="track-length-value" for="track-length">16</output>
+              </label>
+
+              <div class="length-preset-row" aria-label="Pattern length presets">
+                <button class="length-preset" type="button" data-length="8">8</button>
+                <button class="length-preset active" type="button" data-length="16">16</button>
+                <button class="length-preset" type="button" data-length="32">32</button>
+                <button class="length-preset" type="button" data-length="64">64</button>
+              </div>
+            </div>
+
+            <label class="swing-control" for="swing">
+              <span>Swing</span>
+              <input id="swing" type="range" min="0" max="100" value="0" />
+              <output id="swing-value" for="swing">0%</output>
+            </label>
+
+            <label class="loop-toggle" for="loop-toggle">
+              <span>Loop</span>
+              <span class="switch-wrap">
+                <input id="loop-toggle" type="checkbox" checked />
+                <span class="switch-slider"></span>
+              </span>
+            </label>
+          </div>
         </div>
       </header>
 

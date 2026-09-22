@@ -32,6 +32,7 @@ const PRESET_SONGS = [
     id: "preset-classic-rock",
     name: "Classic Rock",
     bpm: 110,
+    swing: 18,
     steps: 16,
     drumOrder: ["kick", "snare", "hihat", "clap", "tom", "ride", "crash", "openhat", "rim", "floorTom", "midTom", "lowTom", "shaker", "tambourine", "conga", "cowbell", "bongo", "maraca", "clave", "sidestick", "snap", "subkick", "synthkick", "reversekick", "crash2"],
     hiddenDrums: [],
@@ -67,6 +68,7 @@ const PRESET_SONGS = [
     id: "preset-house",
     name: "House Groove",
     bpm: 122,
+    swing: 28,
     steps: 16,
     drumOrder: ["kick", "snare", "hihat", "clap", "tom", "ride", "crash", "openhat", "rim", "floorTom", "midTom", "lowTom", "shaker", "tambourine", "conga", "cowbell", "bongo", "maraca", "clave", "sidestick", "snap", "subkick", "synthkick", "reversekick", "crash2"],
     hiddenDrums: [],
@@ -102,6 +104,7 @@ const PRESET_SONGS = [
     id: "preset-future-funk",
     name: "Future Funk",
     bpm: 128,
+    swing: 36,
     steps: 16,
     drumOrder: ["kick", "snare", "hihat", "clap", "tom", "ride", "crash", "openhat", "rim", "floorTom", "midTom", "lowTom", "shaker", "tambourine", "conga", "cowbell", "bongo", "maraca", "clave", "sidestick", "snap", "subkick", "synthkick", "reversekick", "crash2"],
     hiddenDrums: [],
@@ -251,6 +254,7 @@ const PRESET_SONGS = [
     id: "preset-disco-flash",
     name: "Disco Flash",
     bpm: 118,
+    swing: 42,
     steps: 16,
     drumOrder: ["kick", "snare", "hihat", "clap", "tom", "ride", "crash", "openhat", "rim", "floorTom", "midTom", "lowTom", "shaker", "tambourine", "conga", "cowbell", "bongo", "maraca", "clave", "sidestick", "snap", "subkick", "synthkick", "reversekick", "crash2"],
     hiddenDrums: [],
@@ -267,6 +271,7 @@ const PRESET_SONGS = [
     id: "preset-dnb-skank",
     name: "DNB Skank",
     bpm: 174,
+    swing: 55,
     steps: 16,
     drumOrder: ["kick", "snare", "hihat", "clap", "tom", "ride", "crash", "openhat", "rim", "floorTom", "midTom", "lowTom", "shaker", "tambourine", "conga", "cowbell", "bongo", "maraca", "clave", "sidestick", "snap", "subkick", "synthkick", "reversekick", "crash2"],
     hiddenDrums: [],
@@ -382,11 +387,13 @@ let timerId = null;
 let nextStepTime = 0;
 let bpm = 110;
 let swing = 0;
+let isLoopEnabled = true;
 let audioContext = null;
 let draggedDrum = null;
 
 const playButton = document.getElementById("play-button");
 const themeToggle = document.getElementById("theme-toggle");
+const loopToggle = document.getElementById("loop-toggle");
 const tempoInput = document.getElementById("tempo");
 const tempoValue = document.getElementById("tempo-value");
 const trackLengthInput = document.getElementById("track-length");
@@ -412,6 +419,7 @@ function buildSongFromCurrentState(name, id = null) {
     id: id || `custom-${Date.now()}`,
     name,
     bpm,
+    swing,
     steps: STEP_COUNT,
     hiddenDrums: [...hiddenDrums],
     drumOrder: [...drumOrder],
@@ -629,8 +637,11 @@ function loadSongIntoMachine(song) {
   });
 
   bpm = Number(song.bpm) || bpm;
+  swing = Number(song.swing) || 0;
   tempoInput.value = String(bpm);
+  swingInput.value = String(swing);
   updateTempoLabel();
+  updateSwingLabel();
   selectedStep = 0;
   currentStep = 0;
   songNameInput.value = song.name || "";
@@ -787,6 +798,7 @@ function getCurrentSongLink() {
     getUrlSafeBase64(songNameInput.value.trim() || "My Song"),
     String(bpm),
     String(STEP_COUNT),
+    String(Math.round(swing)),
     encodeDrumBitmask(hiddenDrums),
     encodeDrumOrder(drumOrder),
     patternData,
@@ -803,13 +815,29 @@ function loadSongFromUrl() {
 
   try {
     if (hash.startsWith("v2:")) {
-      const [version, encodedName, bpmValue, stepsValue, hiddenValue, orderValue, patternValue] = hash.split(":");
+      const parts = hash.split(":");
+      let version;
+      let encodedName;
+      let bpmValue;
+      let stepsValue;
+      let swingValue = 0;
+      let hiddenValue;
+      let orderValue;
+      let patternValue;
+
+      if (parts.length >= 8) {
+        [version, encodedName, bpmValue, stepsValue, swingValue, hiddenValue, orderValue, patternValue] = parts;
+      } else {
+        [version, encodedName, bpmValue, stepsValue, hiddenValue, orderValue, patternValue] = parts;
+      }
+
       if (version !== "v2") {
         throw new Error("Unsupported compact share format");
       }
 
       const name = fromUrlSafeBase64(encodedName || "");
       const nextSteps = Number(stepsValue) || STEP_COUNT;
+      const nextSwing = Number(swingValue) || 0;
       const order = decodeDrumOrder(orderValue || "");
       const hidden = decodeDrumBitmask(hiddenValue || "");
       const sequenceMap = Object.fromEntries(DRUM_NAMES.map((drum) => [drum, Array(nextSteps).fill(false)]));
@@ -830,6 +858,7 @@ function loadSongFromUrl() {
       loadSongIntoMachine({
         name,
         bpm: Number(bpmValue) || bpm,
+        swing: nextSwing,
         steps: nextSteps,
         hiddenDrums: hidden,
         drumOrder: order,
@@ -852,6 +881,7 @@ function loadSongFromUrl() {
       const payload = {
         name,
         bpm: Number(bpmValue) || bpm,
+        swing: 0,
         steps: nextSteps,
         hiddenDrums: hidden,
         drumOrder: order,
@@ -1800,6 +1830,11 @@ function advanceStep() {
   selectedStep = currentStep;
   updateCurrentStepHighlight();
 
+  if (!isLoopEnabled && currentStep === STEP_COUNT - 1) {
+    stopPlayback();
+    return;
+  }
+
   currentStep = (currentStep + 1) % STEP_COUNT;
   nextStepTime = scheduledTime + stepDurationSeconds;
 
@@ -1948,6 +1983,13 @@ swingInput.addEventListener("input", (event) => {
   resetPresetSelection();
 });
 
+loopToggle.addEventListener("change", (event) => {
+  isLoopEnabled = Boolean(event.target.checked);
+  if (isPlaying && !isLoopEnabled && currentStep === STEP_COUNT - 1) {
+    stopPlayback();
+  }
+});
+
 document.querySelectorAll(".length-preset").forEach((button) => {
   button.addEventListener("click", () => {
     const nextLength = Number(button.dataset.length);
@@ -1974,6 +2016,10 @@ songNameInput.addEventListener("input", () => {
 
 const savedTheme = localStorage.getItem("drum-machine-theme") || "dark";
 applyTheme(savedTheme);
+
+if (loopToggle) {
+  loopToggle.checked = isLoopEnabled;
+}
 
 updateTempoLabel();
 updateTrackLengthLabel();

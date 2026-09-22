@@ -74,8 +74,15 @@ body[data-theme="light"] .app-shell {
   display: flex;
   justify-content: space-between;
   gap: 12px;
-  align-items: center;
+  align-items: flex-start;
   margin-bottom: 12px;
+}
+
+.title-group {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
 }
 
 .eyebrow {
@@ -93,9 +100,25 @@ h1 {
 
 .controls {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 12px;
   flex-wrap: wrap;
+  flex-direction: row;
+  margin-left: auto;
+}
+
+.control-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.slider-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: min(100%, 260px);
 }
 
 .length-group {
@@ -199,8 +222,11 @@ body[data-theme="light"] .song-actions button {
   border-radius: 999px;
   background: linear-gradient(135deg, var(--accent), #4dd7b2);
   color: #11211c;
-  padding: 0.72rem 1.3rem;
-  font-weight: 700;
+  padding: 1.5rem 3rem;
+  min-width: 180px;
+  font-size: 2.8rem;
+  line-height: 1;
+  font-weight: 900;
   cursor: pointer;
   transition: transform 0.15s ease, box-shadow 0.15s ease;
   box-shadow: 0 12px 26px rgba(41, 195, 155, 0.24);
@@ -233,7 +259,8 @@ body[data-theme="light"] .favorite-button {
 
 .tempo-control,
 .length-control,
-.swing-control {
+.swing-control,
+.loop-toggle {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -241,6 +268,19 @@ body[data-theme="light"] .favorite-button {
   border: 1px solid var(--line);
   border-radius: 12px;
   padding: 0.45rem 0.7rem;
+  width: min(100%, 260px);
+}
+
+.loop-toggle {
+  justify-content: space-between;
+}
+
+.loop-toggle span:first-child,
+.tempo-control span,
+.length-control span,
+.swing-control span {
+  font-weight: 600;
+  color: var(--muted);
 }
 
 .theme-toggle {
@@ -268,17 +308,64 @@ body[data-theme="light"] .theme-toggle {
 #tempo,
 #track-length,
 #swing {
-  width: 160px;
+  width: 100%;
+  min-width: 0;
   accent-color: var(--accent-2);
 }
 
 #tempo-value,
 #track-length-value,
 #swing-value {
-  min-width: 40px;
+  min-width: 42px;
   text-align: right;
   font-weight: 700;
   color: var(--text);
+}
+
+.switch-wrap {
+  position: relative;
+  display: inline-block;
+  width: 48px;
+  height: 28px;
+}
+
+.switch-wrap input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.switch-slider {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--line);
+  transition: background 0.2s ease;
+  cursor: pointer;
+}
+
+.switch-slider::before {
+  content: "";
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  left: 5px;
+  top: 4px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.18);
+  transition: transform 0.2s ease;
+}
+
+.switch-wrap input:checked + .switch-slider {
+  background: rgba(116, 240, 200, 0.4);
+  border-color: rgba(116, 240, 200, 0.5);
+}
+
+.switch-wrap input:checked + .switch-slider::before {
+  transform: translateX(20px);
+  background: var(--accent);
 }
 
 .length-preset-row {
