@@ -675,6 +675,9 @@ let timerId = null;
 let nextStepTime = 0;
 let bpm = 110;
 let swing = 0;
+let shuffle = 0;
+let humanize = 0;
+let grooveOffset = 0;
 let isLoopEnabled = true;
 let secretUnlocked = localStorage.getItem("drum-machine-secret-unlocked") === "true";
 let audioContext = null;
@@ -690,6 +693,12 @@ const trackLengthInput = document.getElementById("track-length");
 const trackLengthValue = document.getElementById("track-length-value");
 const swingInput = document.getElementById("swing");
 const swingValue = document.getElementById("swing-value");
+const shuffleInput = document.getElementById("shuffle");
+const shuffleValue = document.getElementById("shuffle-value");
+const humanizeInput = document.getElementById("humanize");
+const humanizeValue = document.getElementById("humanize-value");
+const grooveOffsetInput = document.getElementById("groove-offset");
+const grooveOffsetValue = document.getElementById("offset-value");
 const sequenceGrid = document.getElementById("sequence-grid");
 const favoriteButton = document.getElementById("favorite-preset-button");
 const songSelect = document.getElementById("song-select");
@@ -710,6 +719,9 @@ function buildSongFromCurrentState(name, id = null) {
     name,
     bpm,
     swing,
+    shuffle,
+    humanize,
+    grooveOffset,
     steps: STEP_COUNT,
     hiddenDrums: [...hiddenDrums],
     drumOrder: [...drumOrder],
@@ -814,6 +826,15 @@ function toggleFavoriteSong() {
   saveFavoriteSongIds([...favoriteIds]);
   renderSongLibrary();
   updateFavoriteButton();
+}
+
+function updateSecretVisualState() {
+  document.body.classList.toggle("secret-active", secretUnlocked);
+
+  const secretBanner = document.getElementById("secret-banner");
+  if (secretBanner) {
+    secretBanner.hidden = !secretUnlocked;
+  }
 }
 
 function renderSongLibrary() {
@@ -945,10 +966,19 @@ function loadSongIntoMachine(song) {
 
   bpm = Number(song.bpm) || bpm;
   swing = Number(song.swing) || 0;
+  shuffle = Number(song.shuffle) || 0;
+  humanize = Number(song.humanize) || 0;
+  grooveOffset = Number(song.grooveOffset) || 0;
   tempoInput.value = String(bpm);
   swingInput.value = String(swing);
+  shuffleInput.value = String(shuffle);
+  humanizeInput.value = String(humanize);
+  grooveOffsetInput.value = String(grooveOffset);
   updateTempoLabel();
   updateSwingLabel();
+  updateShuffleLabel();
+  updateHumanizeLabel();
+  updateGrooveOffsetLabel();
   selectedStep = 0;
   currentStep = 0;
   songNameInput.value = song.name || "";
@@ -1238,6 +1268,18 @@ function updateTrackLengthLabel() {
 
 function updateSwingLabel() {
   swingValue.textContent = `${Math.round(swing)}%`;
+}
+
+function updateShuffleLabel() {
+  shuffleValue.textContent = `${Math.round(shuffle)}%`;
+}
+
+function updateHumanizeLabel() {
+  humanizeValue.textContent = `${Math.round(humanize)}%`;
+}
+
+function updateGrooveOffsetLabel() {
+  grooveOffsetValue.textContent = `${Math.round(grooveOffset)}ms`;
 }
 
 function resizeSequence(newLength) {
@@ -2122,7 +2164,11 @@ function advanceStep() {
   const stepDurationSeconds = 60 / bpm / 4;
   const baseTime = nextStepTime || context.currentTime + 0.01;
   const swingAmount = currentStep % 2 === 1 && swing > 0 ? stepDurationSeconds * (swing / 100) : 0;
-  const scheduledTime = baseTime + swingAmount;
+  const shuffleAmount = currentStep % 2 === 1 && shuffle > 0 ? stepDurationSeconds * (shuffle / 100) : 0;
+  const humanizeRange = humanize > 0 ? stepDurationSeconds * (humanize / 100) : 0;
+  const humanizeAmount = humanize > 0 ? ((Math.random() - 0.5) * 2 * humanizeRange) : 0;
+  const offsetAmount = grooveOffset > 0 ? (currentStep % 2 === 0 ? grooveOffset / 1000 : -grooveOffset / 1000) : 0;
+  const scheduledTime = baseTime + swingAmount + shuffleAmount + humanizeAmount + offsetAmount;
 
   for (const drum of DRUM_NAMES) {
     if (hiddenDrums.has(drum)) {
@@ -2202,10 +2248,12 @@ if (secretTrigger) {
     secretUnlocked = !secretUnlocked;
     localStorage.setItem("drum-machine-secret-unlocked", String(secretUnlocked));
     syncSecretTriggerState();
+    updateSecretVisualState();
     renderSongLibrary();
   });
 
   syncSecretTriggerState();
+  updateSecretVisualState();
 }
 
 songSelect.addEventListener("change", () => {
@@ -2306,6 +2354,24 @@ swingInput.addEventListener("input", (event) => {
   resetPresetSelection();
 });
 
+shuffleInput.addEventListener("input", (event) => {
+  shuffle = Number(event.target.value);
+  updateShuffleLabel();
+  resetPresetSelection();
+});
+
+humanizeInput.addEventListener("input", (event) => {
+  humanize = Number(event.target.value);
+  updateHumanizeLabel();
+  resetPresetSelection();
+});
+
+grooveOffsetInput.addEventListener("input", (event) => {
+  grooveOffset = Number(event.target.value);
+  updateGrooveOffsetLabel();
+  resetPresetSelection();
+});
+
 loopToggle.addEventListener("change", (event) => {
   isLoopEnabled = Boolean(event.target.checked);
   if (isPlaying && !isLoopEnabled && currentStep === STEP_COUNT - 1) {
@@ -2347,6 +2413,9 @@ if (loopToggle) {
 updateTempoLabel();
 updateTrackLengthLabel();
 updateSwingLabel();
+updateShuffleLabel();
+updateHumanizeLabel();
+updateGrooveOffsetLabel();
 renderSongLibrary();
 refreshSongActionState();
 updateFavoriteButton();

@@ -64,10 +64,49 @@ input {
   border-radius: 20px;
   box-shadow: 0 22px 44px var(--shadow);
   padding: 16px 18px 18px;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
 }
 
 body[data-theme="light"] .app-shell {
   background: rgba(255, 255, 255, 0.92);
+}
+
+body.secret-active .app-shell {
+  border-color: rgba(255, 215, 64, 0.9);
+  box-shadow: 0 0 0 3px rgba(255, 214, 64, 0.3), 0 0 30px rgba(255, 214, 64, 0.5), 0 22px 44px var(--shadow);
+  transform: scale(1.01);
+}
+
+.secret-banner {
+  display: none;
+  margin: 0 0 12px;
+  padding: 0.7rem 1rem;
+  border: 2px solid rgba(255, 214, 64, 0.9);
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(255, 214, 64, 0.22), rgba(255, 92, 122, 0.18));
+  color: #fff6d3;
+  font-size: 0.8rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 900;
+  text-align: center;
+  box-shadow: 0 0 24px rgba(255, 214, 64, 0.36);
+  animation: secret-pulse 1s ease-in-out infinite alternate;
+}
+
+body.secret-active .secret-banner {
+  display: block;
+}
+
+@keyframes secret-pulse {
+  from {
+    transform: scale(1);
+    box-shadow: 0 0 0 rgba(255, 214, 64, 0.2), 0 0 18px rgba(255, 214, 64, 0.32);
+  }
+  to {
+    transform: scale(1.02);
+    box-shadow: 0 0 0 rgba(255, 214, 64, 0.2), 0 0 30px rgba(255, 214, 64, 0.6), 0 0 50px rgba(255, 92, 122, 0.25);
+  }
 }
 
 .secret-trigger {
@@ -279,6 +318,9 @@ body[data-theme="light"] .favorite-button {
 .tempo-control,
 .length-control,
 .swing-control,
+.shuffle-control,
+.humanize-control,
+.offset-control,
 .loop-toggle {
   display: flex;
   align-items: center;
@@ -297,7 +339,10 @@ body[data-theme="light"] .favorite-button {
 .loop-toggle span:first-child,
 .tempo-control span,
 .length-control span,
-.swing-control span {
+.swing-control span,
+.shuffle-control span,
+.humanize-control span,
+.offset-control span {
   font-weight: 600;
   color: var(--muted);
 }

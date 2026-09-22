@@ -9,6 +9,8 @@
   <body>
     <button id="secret-trigger" class="secret-trigger" type="button" aria-label="Secret unlock"></button>
     <div class="app-shell">
+      <div id="secret-banner" class="secret-banner" aria-live="polite">SECRET MODE UNLOCKED</div>
+
       <header class="topbar">
         <div class="title-group">
           <div>
@@ -49,6 +51,24 @@
               <span>Swing</span>
               <input id="swing" type="range" min="0" max="100" value="0" />
               <output id="swing-value" for="swing">0%</output>
+            </label>
+
+            <label class="shuffle-control" for="shuffle">
+              <span>Shuffle</span>
+              <input id="shuffle" type="range" min="0" max="100" value="0" />
+              <output id="shuffle-value" for="shuffle">0%</output>
+            </label>
+
+            <label class="humanize-control" for="humanize">
+              <span>Humanize</span>
+              <input id="humanize" type="range" min="0" max="100" value="0" />
+              <output id="humanize-value" for="humanize">0%</output>
+            </label>
+
+            <label class="offset-control" for="groove-offset">
+              <span>Offset</span>
+              <input id="groove-offset" type="range" min="0" max="25" value="0" />
+              <output id="offset-value" for="groove-offset">0ms</output>
             </label>
 
             <label class="loop-toggle" for="loop-toggle">
