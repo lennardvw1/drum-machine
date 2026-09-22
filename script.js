@@ -607,17 +607,19 @@ function fromUrlSafeBase64(value) {
 }
 
 function getCurrentSongLink() {
-  const payload = {
-    name: songNameInput.value.trim() || "My Song",
-    bpm,
-    steps: STEP_COUNT,
-    hiddenDrums: [...hiddenDrums],
-    drumOrder: [...drumOrder],
-    sequence: cloneSequence(),
-  };
+  const compactPayload = [
+    "v1",
+    getUrlSafeBase64(songNameInput.value.trim() || "My Song"),
+    String(bpm),
+    String(STEP_COUNT),
+    [...hiddenDrums].join(","),
+    [...drumOrder].join(","),
+    [...drumOrder]
+      .map((drum) => sequence[drum].slice(0, STEP_COUNT).map((step) => (step ? "1" : "0")).join(""))
+      .join("|"),
+  ].join(":");
 
-  const encoded = getUrlSafeBase64(JSON.stringify(payload));
-  return `${window.location.href.split("#")[0]}#${encoded}`;
+  return `${window.location.href.split("#")[0]}#${compactPayload}`;
 }
 
 function loadSongFromUrl() {
@@ -627,6 +629,36 @@ function loadSongFromUrl() {
   }
 
   try {
+    if (hash.startsWith("v1:")) {
+      const [version, encodedName, bpmValue, stepsValue, hiddenValue, orderValue, masksValue] = hash.split(":");
+      if (version !== "v1") {
+        throw new Error("Unsupported compact share format");
+      }
+
+      const name = fromUrlSafeBase64(encodedName || "");
+      const nextSteps = Number(stepsValue) || STEP_COUNT;
+      const order = (orderValue || DRUM_NAMES.join(",")).split(",").filter(Boolean);
+      const hidden = (hiddenValue || "").split(",").filter(Boolean);
+      const masks = (masksValue || "").split("|").filter(Boolean);
+      const payload = {
+        name,
+        bpm: Number(bpmValue) || bpm,
+        steps: nextSteps,
+        hiddenDrums: hidden,
+        drumOrder: order,
+        sequence: Object.fromEntries(
+          order.map((drum, index) => {
+            const mask = masks[index] || "0".repeat(nextSteps);
+            const values = Array.from(mask.slice(0, nextSteps)).map((bit) => bit === "1");
+            return [drum, values];
+          })
+        ),
+      };
+
+      loadSongIntoMachine(payload);
+      return;
+    }
+
     const payload = JSON.parse(fromUrlSafeBase64(hash));
     loadSongIntoMachine(payload);
   } catch (error) {
@@ -1548,6 +1580,19 @@ function stopPlayback() {
   render();
 }
 
+function schedulePlaybackTick() {
+  if (!isPlaying) {
+    return;
+  }
+
+  window.clearTimeout(timerId);
+  timerId = window.setTimeout(() => {
+    if (isPlaying) {
+      advanceStep();
+    }
+  }, 10);
+}
+
 function startPlayback() {
   const context = ensureAudioContext();
 
@@ -1632,8 +1677,8 @@ tempoInput.addEventListener("input", (event) => {
   updateTempoLabel();
 
   if (isPlaying) {
-    stopPlayback();
-    startPlayback();
+    nextStepTime = 0;
+    schedulePlaybackTick();
   }
 });
 
