@@ -59,6 +59,8 @@ const sequence = Object.fromEntries(
   DRUM_NAMES.map((drum) => [drum, Array(STEP_COUNT).fill(false)])
 );
 
+const drumOrder = [...DRUM_NAMES];
+const hiddenDrums = new Set();
 let selectedStep = 0;
 let currentStep = 0;
 let isPlaying = false;
@@ -66,14 +68,13 @@ let timerId = null;
 let nextStepTime = 0;
 let bpm = 110;
 let audioContext = null;
+let draggedDrum = null;
 
 const playButton = document.getElementById("play-button");
 const tempoInput = document.getElementById("tempo");
 const tempoValue = document.getElementById("tempo-value");
 const trackLengthInput = document.getElementById("track-length");
 const trackLengthValue = document.getElementById("track-length-value");
-const selectedStepLabel = document.getElementById("selected-step");
-const stepSelector = document.getElementById("step-selector");
 const sequenceGrid = document.getElementById("sequence-grid");
 
 function updateTempoLabel() {
@@ -108,31 +109,37 @@ function resizeSequence(newLength) {
 }
 
 function renderStepSelector() {
-  stepSelector.innerHTML = "";
+  return;
+}
 
-  for (let step = 0; step < STEP_COUNT; step += 1) {
-    const button = document.createElement("button");
-    button.type = "button";
-    button.className = "step-button";
-    button.textContent = String(step + 1);
+function reorderDrumRows(fromDrum, toDrum) {
+  const fromIndex = drumOrder.indexOf(fromDrum);
+  const toIndex = drumOrder.indexOf(toDrum);
 
-    if (selectedStep === step) {
-      button.classList.add("active");
-    }
-
-    if (isPlaying && currentStep === step) {
-      button.classList.add("current");
-    }
-
-    button.addEventListener("click", () => {
-      selectedStep = step;
-      render();
-    });
-
-    stepSelector.appendChild(button);
+  if (fromIndex === -1 || toIndex === -1 || fromIndex === toIndex) {
+    return;
   }
 
-  selectedStepLabel.textContent = String(selectedStep + 1);
+  const [movedDrum] = drumOrder.splice(fromIndex, 1);
+  drumOrder.splice(toIndex, 0, movedDrum);
+}
+
+function getOrderedDrums() {
+  return [...drumOrder].sort((a, b) => {
+    const aHidden = Number(hiddenDrums.has(a));
+    const bHidden = Number(hiddenDrums.has(b));
+    return aHidden - bHidden;
+  });
+}
+
+function toggleDrumVisibility(drum) {
+  if (hiddenDrums.has(drum)) {
+    hiddenDrums.delete(drum);
+  } else {
+    hiddenDrums.add(drum);
+  }
+
+  render();
 }
 
 function triggerCellRightClick(drum, step) {
@@ -144,47 +151,122 @@ function renderSequenceGrid() {
   sequenceGrid.innerHTML = "";
   document.documentElement.style.setProperty("--step-count", String(STEP_COUNT));
 
-  for (const drum of DRUM_NAMES) {
+  for (const drum of getOrderedDrums()) {
     const row = document.createElement("div");
+    const isHidden = hiddenDrums.has(drum);
     row.className = `sequence-row ${drum}-row`;
+    row.draggable = true;
     row.style.setProperty("--step-count", String(STEP_COUNT));
+
+    if (isHidden) {
+      row.classList.add("is-hidden");
+    }
 
     const label = document.createElement("div");
     label.className = "row-label";
-    label.textContent = DRUM_LABELS[drum];
+
+    const rowName = document.createElement("span");
+    rowName.className = "row-name";
+    rowName.textContent = DRUM_LABELS[drum];
+    label.appendChild(rowName);
+
+    const eyeButton = document.createElement("button");
+    eyeButton.type = "button";
+    eyeButton.className = "row-toggle";
+    eyeButton.textContent = isHidden ? "🙈" : "👁";
+    eyeButton.setAttribute("aria-label", isHidden ? `Show ${DRUM_LABELS[drum]}` : `Hide ${DRUM_LABELS[drum]}`);
+    eyeButton.title = isHidden ? `Show ${DRUM_LABELS[drum]}` : `Hide ${DRUM_LABELS[drum]}`;
+    eyeButton.addEventListener("click", (event) => {
+      event.stopPropagation();
+      toggleDrumVisibility(drum);
+    });
+    label.appendChild(eyeButton);
     row.appendChild(label);
+
+    row.addEventListener("dragstart", (event) => {
+      if (isHidden) {
+        event.preventDefault();
+        return;
+      }
+
+      draggedDrum = drum;
+      row.classList.add("dragging");
+      event.dataTransfer.effectAllowed = "move";
+      event.dataTransfer.setData("text/plain", drum);
+    });
+
+    row.addEventListener("dragover", (event) => {
+      if (isHidden) {
+        return;
+      }
+
+      event.preventDefault();
+      row.classList.add("drag-over");
+      event.dataTransfer.dropEffect = "move";
+    });
+
+    row.addEventListener("dragleave", () => {
+      row.classList.remove("drag-over");
+    });
+
+    row.addEventListener("drop", (event) => {
+      if (isHidden) {
+        return;
+      }
+
+      event.preventDefault();
+      const droppedDrum = event.dataTransfer.getData("text/plain") || draggedDrum;
+      row.classList.remove("drag-over");
+
+      if (droppedDrum && droppedDrum !== drum) {
+        reorderDrumRows(droppedDrum, drum);
+        render();
+      }
+
+      draggedDrum = null;
+      row.classList.remove("dragging");
+    });
+
+    row.addEventListener("dragend", () => {
+      draggedDrum = null;
+      row.classList.remove("dragging");
+      row.classList.remove("drag-over");
+    });
 
     for (let step = 0; step < STEP_COUNT; step += 1) {
       const cell = document.createElement("button");
       cell.type = "button";
       cell.className = "step-cell";
       cell.setAttribute("aria-label", `${DRUM_LABELS[drum]} step ${step + 1}`);
+      cell.disabled = isHidden;
 
-      if (sequence[drum][step]) {
+      if (!isHidden && sequence[drum][step]) {
         cell.classList.add("active");
       }
 
-      if (isPlaying && currentStep === step) {
+      if (!isHidden && isPlaying && currentStep === step) {
         cell.classList.add("current");
       }
 
-      cell.addEventListener("click", () => {
-        const context = ensureAudioContext();
-        const isOn = sequence[drum][step];
+      if (!isHidden) {
+        cell.addEventListener("click", () => {
+          const context = ensureAudioContext();
+          const isOn = sequence[drum][step];
 
-        if (context && !isOn) {
-          triggerDrum(drum, context.currentTime + 0.01);
-        }
+          if (context && !isOn) {
+            triggerDrum(drum, context.currentTime + 0.01);
+          }
 
-        sequence[drum][step] = !sequence[drum][step];
-        selectedStep = step;
-        render();
-      });
+          sequence[drum][step] = !sequence[drum][step];
+          selectedStep = step;
+          render();
+        });
 
-      cell.addEventListener("contextmenu", (event) => {
-        event.preventDefault();
-        triggerCellRightClick(drum, step);
-      });
+        cell.addEventListener("contextmenu", (event) => {
+          event.preventDefault();
+          triggerCellRightClick(drum, step);
+        });
+      }
 
       row.appendChild(cell);
     }
@@ -851,6 +933,10 @@ function advanceStep() {
   const scheduledTime = nextStepTime || context.currentTime + 0.01;
 
   for (const drum of DRUM_NAMES) {
+    if (hiddenDrums.has(drum)) {
+      continue;
+    }
+
     if (sequence[drum][currentStep]) {
       triggerDrum(drum, scheduledTime);
     }
@@ -910,19 +996,6 @@ tempoInput.addEventListener("input", (event) => {
     startPlayback();
   }
 });
-
-for (const drum of DRUM_NAMES) {
-  const pad = document.querySelector(`.drum-pad[data-drum="${drum}"]`);
-
-  pad.addEventListener("click", () => {
-    const context = ensureAudioContext();
-    if (context) {
-      triggerDrum(drum, context.currentTime + 0.01);
-    }
-    sequence[drum][selectedStep] = true;
-    render();
-  });
-}
 
 trackLengthInput.addEventListener("input", (event) => {
   const nextLength = Number(event.target.value);
