@@ -31,6 +31,25 @@
         </div>
       </header>
 
+      <section class="song-library" aria-label="Song library">
+        <div class="song-controls-row">
+          <label class="song-select-group" for="song-select">
+            <span>Library</span>
+            <select id="song-select">
+              <option value="">Choose a song</option>
+            </select>
+          </label>
+
+          <input id="song-name" type="text" class="song-name-input" maxlength="32" placeholder="Song name" />
+        </div>
+
+        <div class="song-actions">
+          <button id="save-song-button" type="button">Save song</button>
+          <button id="copy-link-button" type="button">Copy link</button>
+          <button id="delete-song-button" type="button" class="danger-button">Delete</button>
+        </div>
+      </section>
+
       <section class="sequencer-panel" aria-label="Sequence editor">
         <div id="sequence-grid" class="sequence-grid"></div>
       </section>

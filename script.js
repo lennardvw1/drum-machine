@@ -25,6 +25,114 @@ const DRUM_NAMES = [
   "reversekick",
   "crash2",
 ];
+const SONG_LIBRARY_KEY = "drum-machine-custom-songs";
+const PRESET_SONGS = [
+  {
+    id: "preset-classic-rock",
+    name: "Classic Rock",
+    bpm: 110,
+    steps: 16,
+    drumOrder: ["kick", "snare", "hihat", "clap", "tom", "ride", "crash", "openhat", "rim", "floorTom", "midTom", "lowTom", "shaker", "tambourine", "conga", "cowbell", "bongo", "maraca", "clave", "sidestick", "snap", "subkick", "synthkick", "reversekick", "crash2"],
+    hiddenDrums: [],
+    sequence: {
+      kick: [true, false, false, false, true, false, false, false, true, false, false, false, true, false, false, false],
+      snare: [false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false],
+      hihat: [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true],
+      clap: [false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false],
+      tom: [false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false],
+      ride: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+      crash: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+      openhat: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+      rim: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+      floorTom: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+      midTom: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+      lowTom: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+      shaker: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+      tambourine: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+      conga: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+      cowbell: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+      bongo: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+      maraca: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+      clave: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+      sidestick: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+      snap: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+      subkick: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+      synthkick: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+      reversekick: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+      crash2: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+    },
+  },
+  {
+    id: "preset-house",
+    name: "House Groove",
+    bpm: 122,
+    steps: 16,
+    drumOrder: ["kick", "snare", "hihat", "clap", "tom", "ride", "crash", "openhat", "rim", "floorTom", "midTom", "lowTom", "shaker", "tambourine", "conga", "cowbell", "bongo", "maraca", "clave", "sidestick", "snap", "subkick", "synthkick", "reversekick", "crash2"],
+    hiddenDrums: [],
+    sequence: {
+      kick: [true, false, false, false, true, false, false, false, true, false, false, false, true, false, false, true],
+      snare: [false, false, false, false, false, false, true, false, false, false, false, false, true, false, false, false],
+      hihat: [true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false],
+      clap: [false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false],
+      tom: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+      ride: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+      crash: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+      openhat: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+      rim: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+      floorTom: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+      midTom: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+      lowTom: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+      shaker: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+      tambourine: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+      conga: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+      cowbell: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+      bongo: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+      maraca: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+      clave: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+      sidestick: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+      snap: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+      subkick: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+      synthkick: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+      reversekick: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+      crash2: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+    },
+  },
+  {
+    id: "preset-future-funk",
+    name: "Future Funk",
+    bpm: 128,
+    steps: 16,
+    drumOrder: ["kick", "snare", "hihat", "clap", "tom", "ride", "crash", "openhat", "rim", "floorTom", "midTom", "lowTom", "shaker", "tambourine", "conga", "cowbell", "bongo", "maraca", "clave", "sidestick", "snap", "subkick", "synthkick", "reversekick", "crash2"],
+    hiddenDrums: [],
+    sequence: {
+      kick: [true, false, false, false, true, false, false, true, true, false, false, false, true, false, false, true],
+      snare: [false, false, false, false, false, false, true, false, false, false, false, false, true, false, false, false],
+      hihat: [true, false, true, false, true, true, false, true, true, false, true, false, true, false, true, false],
+      clap: [false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false],
+      tom: [false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false],
+      ride: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+      crash: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+      openhat: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+      rim: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+      floorTom: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+      midTom: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+      lowTom: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+      shaker: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+      tambourine: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+      conga: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+      cowbell: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+      bongo: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+      maraca: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+      clave: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+      sidestick: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+      snap: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+      subkick: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+      synthkick: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+      reversekick: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+      crash2: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+    },
+  },
+];
 const DRUM_LABELS = {
   kick: "Kick",
   snare: "Snare",
@@ -76,6 +184,197 @@ const tempoValue = document.getElementById("tempo-value");
 const trackLengthInput = document.getElementById("track-length");
 const trackLengthValue = document.getElementById("track-length-value");
 const sequenceGrid = document.getElementById("sequence-grid");
+const songSelect = document.getElementById("song-select");
+const songNameInput = document.getElementById("song-name");
+const saveSongButton = document.getElementById("save-song-button");
+const copyLinkButton = document.getElementById("copy-link-button");
+const deleteSongButton = document.getElementById("delete-song-button");
+
+function cloneSequence(source = sequence) {
+  return Object.fromEntries(
+    DRUM_NAMES.map((drum) => [drum, [...(source[drum] || Array(STEP_COUNT).fill(false))]])
+  );
+}
+
+function buildSongFromCurrentState(name, id = null) {
+  return {
+    id: id || `custom-${Date.now()}`,
+    name,
+    bpm,
+    steps: STEP_COUNT,
+    hiddenDrums: [...hiddenDrums],
+    drumOrder: [...drumOrder],
+    sequence: cloneSequence(),
+  };
+}
+
+function getCustomSongs() {
+  try {
+    const stored = JSON.parse(localStorage.getItem(SONG_LIBRARY_KEY) || "[]");
+    return Array.isArray(stored) ? stored : [];
+  } catch (error) {
+    return [];
+  }
+}
+
+function saveCustomSongs(songs) {
+  localStorage.setItem(SONG_LIBRARY_KEY, JSON.stringify(songs));
+}
+
+function getLibrarySongs() {
+  return [...PRESET_SONGS, ...getCustomSongs()];
+}
+
+function renderSongLibrary() {
+  const songs = getLibrarySongs();
+  const selectedId = songSelect.value || "";
+
+  songSelect.innerHTML = '<option value="">Choose a song</option>';
+
+  songs.forEach((song) => {
+    const option = document.createElement("option");
+    option.value = song.id;
+    option.textContent = song.name;
+    songSelect.appendChild(option);
+  });
+
+  if (selectedId && songs.some((song) => song.id === selectedId)) {
+    songSelect.value = selectedId;
+  } else {
+    songSelect.value = "";
+  }
+}
+
+function loadSongIntoMachine(song) {
+  if (!song) {
+    return;
+  }
+
+  const nextLength = Number(song.steps) || STEP_COUNT;
+  resizeSequence(nextLength);
+
+  for (const drum of DRUM_NAMES) {
+    const stored = Array.isArray(song.sequence?.[drum]) ? song.sequence[drum] : Array(STEP_COUNT).fill(false);
+    const normalized = Array(STEP_COUNT).fill(false);
+
+    for (let i = 0; i < Math.min(stored.length, STEP_COUNT); i += 1) {
+      normalized[i] = Boolean(stored[i]);
+    }
+
+    sequence[drum] = normalized;
+  }
+
+  const nextDrumOrder = Array.isArray(song.drumOrder) && song.drumOrder.length ? song.drumOrder : [...DRUM_NAMES];
+  drumOrder.length = 0;
+  nextDrumOrder.forEach((drum) => {
+    if (DRUM_NAMES.includes(drum)) {
+      drumOrder.push(drum);
+    }
+  });
+
+  hiddenDrums.clear();
+  (song.hiddenDrums || []).forEach((drum) => {
+    if (DRUM_NAMES.includes(drum)) {
+      hiddenDrums.add(drum);
+    }
+  });
+
+  bpm = Number(song.bpm) || bpm;
+  tempoInput.value = String(bpm);
+  updateTempoLabel();
+  selectedStep = 0;
+  currentStep = 0;
+  songNameInput.value = song.name || "";
+  render();
+}
+
+function saveCurrentSong() {
+  const name = songNameInput.value.trim() || "My Song";
+  const selectedId = songSelect.value;
+  const customSongs = getCustomSongs();
+
+  if (selectedId && selectedId.startsWith("custom-")) {
+    const targetIndex = customSongs.findIndex((song) => song.id === selectedId);
+    const updatedSong = buildSongFromCurrentState(name, selectedId);
+
+    if (targetIndex >= 0) {
+      customSongs[targetIndex] = updatedSong;
+    } else {
+      customSongs.push(updatedSong);
+    }
+
+    saveCustomSongs(customSongs);
+    renderSongLibrary();
+    songSelect.value = selectedId;
+    return;
+  }
+
+  const newSong = buildSongFromCurrentState(name, `custom-${Date.now()}`);
+  customSongs.push(newSong);
+  saveCustomSongs(customSongs);
+  renderSongLibrary();
+  songSelect.value = newSong.id;
+}
+
+function deleteCurrentSong() {
+  const selectedId = songSelect.value;
+  if (!selectedId) {
+    return;
+  }
+
+  const customSongs = getCustomSongs();
+  const nextSongs = customSongs.filter((song) => song.id !== selectedId);
+
+  if (nextSongs.length === customSongs.length) {
+    return;
+  }
+
+  saveCustomSongs(nextSongs);
+  songSelect.value = "";
+  songNameInput.value = "";
+  renderSongLibrary();
+}
+
+function getUrlSafeBase64(value) {
+  return btoa(unescape(encodeURIComponent(value)))
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=+$/g, "");
+}
+
+function fromUrlSafeBase64(value) {
+  const padded = value + "=".repeat((4 - (value.length % 4)) % 4);
+  const base64 = padded.replace(/-/g, "+").replace(/_/g, "/");
+  return decodeURIComponent(escape(atob(base64)));
+}
+
+function getCurrentSongLink() {
+  const payload = {
+    name: songNameInput.value.trim() || "My Song",
+    bpm,
+    steps: STEP_COUNT,
+    hiddenDrums: [...hiddenDrums],
+    drumOrder: [...drumOrder],
+    sequence: cloneSequence(),
+  };
+
+  const encoded = getUrlSafeBase64(JSON.stringify(payload));
+  return `${window.location.href.split("#")[0]}#${encoded}`;
+}
+
+function loadSongFromUrl() {
+  const hash = window.location.hash.replace(/^#/, "");
+  if (!hash) {
+    return;
+  }
+
+  try {
+    const payload = JSON.parse(fromUrlSafeBase64(hash));
+    loadSongIntoMachine(payload);
+  } catch (error) {
+    console.warn("Unable to load song from URL", error);
+  }
+}
 
 function updateTempoLabel() {
   tempoValue.textContent = String(bpm);
@@ -142,9 +441,53 @@ function toggleDrumVisibility(drum) {
   render();
 }
 
+function refreshCellVisualState(cell, drum, step) {
+  const isHidden = hiddenDrums.has(drum);
+  cell.classList.toggle("active", !isHidden && sequence[drum][step]);
+  cell.classList.toggle("current", !isHidden && isPlaying && currentStep === step);
+}
+
+function toggleStep(drum, step) {
+  const context = ensureAudioContext();
+  const isOn = sequence[drum][step];
+
+  if (context && !isOn) {
+    triggerDrum(drum, context.currentTime + 0.01);
+  }
+
+  sequence[drum][step] = !sequence[drum][step];
+  selectedStep = step;
+
+  const targetCell = sequenceGrid.querySelector(`.step-cell[data-drum="${drum}"][data-step="${step}"]`);
+  if (targetCell) {
+    refreshCellVisualState(targetCell, drum, step);
+    return;
+  }
+
+  render();
+}
+
 function triggerCellRightClick(drum, step) {
   sequence[drum][step] = false;
+
+  const targetCell = sequenceGrid.querySelector(`.step-cell[data-drum="${drum}"][data-step="${step}"]`);
+  if (targetCell) {
+    refreshCellVisualState(targetCell, drum, step);
+    return;
+  }
+
   render();
+}
+
+function updateCurrentStepHighlight() {
+  const cells = sequenceGrid.querySelectorAll(".step-cell");
+
+  cells.forEach((cell) => {
+    const row = cell.closest(".sequence-row");
+    const isHidden = row && row.classList.contains("is-hidden");
+    const stepIndex = Number(cell.dataset.step || 0);
+    cell.classList.toggle("current", isPlaying && !isHidden && currentStep === stepIndex);
+  });
 }
 
 function renderSequenceGrid() {
@@ -237,29 +580,15 @@ function renderSequenceGrid() {
       const cell = document.createElement("button");
       cell.type = "button";
       cell.className = "step-cell";
+      cell.dataset.drum = drum;
+      cell.dataset.step = String(step);
       cell.setAttribute("aria-label", `${DRUM_LABELS[drum]} step ${step + 1}`);
       cell.disabled = isHidden;
-
-      if (!isHidden && sequence[drum][step]) {
-        cell.classList.add("active");
-      }
-
-      if (!isHidden && isPlaying && currentStep === step) {
-        cell.classList.add("current");
-      }
+      refreshCellVisualState(cell, drum, step);
 
       if (!isHidden) {
         cell.addEventListener("click", () => {
-          const context = ensureAudioContext();
-          const isOn = sequence[drum][step];
-
-          if (context && !isOn) {
-            triggerDrum(drum, context.currentTime + 0.01);
-          }
-
-          sequence[drum][step] = !sequence[drum][step];
-          selectedStep = step;
-          render();
+          toggleStep(drum, step);
         });
 
         cell.addEventListener("contextmenu", (event) => {
@@ -943,7 +1272,7 @@ function advanceStep() {
   }
 
   selectedStep = currentStep;
-  render();
+  updateCurrentStepHighlight();
 
   currentStep = (currentStep + 1) % STEP_COUNT;
   nextStepTime = scheduledTime + stepDurationSeconds;
@@ -978,7 +1307,60 @@ function startPlayback() {
   advanceStep();
 }
 
+songSelect.addEventListener("change", () => {
+  const selectedId = songSelect.value;
+  if (!selectedId) {
+    songNameInput.value = "";
+    return;
+  }
+
+  const matchingSong = getLibrarySongs().find((song) => song.id === selectedId);
+  if (matchingSong) {
+    loadSongIntoMachine(matchingSong);
+    songNameInput.value = matchingSong.name;
+  }
+});
+
+saveSongButton.addEventListener("click", () => {
+  saveCurrentSong();
+});
+
+copyLinkButton.addEventListener("click", async () => {
+  const shareUrl = getCurrentSongLink();
+
+  try {
+    await navigator.clipboard.writeText(shareUrl);
+  } catch (error) {
+    window.prompt("Copy this link:", shareUrl);
+  }
+
+  window.history.replaceState(null, "", `#${shareUrl.split("#")[1] || ""}`);
+});
+
+deleteSongButton.addEventListener("click", () => {
+  deleteCurrentSong();
+});
+
 playButton.addEventListener("click", () => {
+  if (isPlaying) {
+    stopPlayback();
+    return;
+  }
+
+  startPlayback();
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.code !== "Space") {
+    return;
+  }
+
+  if (event.target && ["INPUT", "TEXTAREA", "SELECT"].includes(event.target.tagName)) {
+    return;
+  }
+
+  event.preventDefault();
+
   if (isPlaying) {
     stopPlayback();
     return;
@@ -1005,4 +1387,6 @@ trackLengthInput.addEventListener("input", (event) => {
 
 updateTempoLabel();
 updateTrackLengthLabel();
+renderSongLibrary();
+loadSongFromUrl();
 render();

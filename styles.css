@@ -71,6 +71,77 @@ h1 {
   gap: 16px;
 }
 
+.song-library {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: rgba(17, 22, 33, 0.7);
+}
+
+.song-controls-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.song-select-group {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.song-select-group select,
+.song-name-input {
+  flex: 1;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.03);
+  color: #ffffff;
+  border-radius: 10px;
+  padding: 0.7rem 0.8rem;
+}
+
+.song-select-group select {
+  min-width: 0;
+  color: #ffffff;
+  background: rgba(18, 22, 30, 0.9);
+}
+
+.song-select-group select option {
+  color: #111827;
+  background: #f3f4f6;
+}
+
+.song-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.song-actions button {
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text);
+  border-radius: 10px;
+  padding: 0.7rem 1rem;
+  cursor: pointer;
+}
+
+.song-actions button:hover {
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+.danger-button {
+  background: rgba(255, 92, 122, 0.12) !important;
+  border-color: rgba(255, 92, 122, 0.34) !important;
+}
+
 .play-button {
   border: none;
   border-radius: 999px;
