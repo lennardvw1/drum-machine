@@ -132,6 +132,211 @@ const PRESET_SONGS = [
       crash2: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
     },
   },
+  {
+    id: "preset-funk-break",
+    name: "Funk Break",
+    bpm: 112,
+    steps: 16,
+    drumOrder: ["kick", "snare", "hihat", "clap", "tom", "ride", "crash", "openhat", "rim", "floorTom", "midTom", "lowTom", "shaker", "tambourine", "conga", "cowbell", "bongo", "maraca", "clave", "sidestick", "snap", "subkick", "synthkick", "reversekick", "crash2"],
+    hiddenDrums: [],
+    sequence: {
+      kick: [true, false, false, false, true, false, false, false, true, false, false, true, true, false, false, false],
+      snare: [false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false],
+      hihat: [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true],
+      clap: [false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false],
+      tom: [false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false],
+      ride: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+      crash: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+      openhat: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+      rim: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+      floorTom: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+      shaker: [false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false],
+      tambourine: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+    },
+  },
+  {
+    id: "preset-indie-pulse",
+    name: "Indie Pulse",
+    bpm: 118,
+    steps: 16,
+    drumOrder: ["kick", "snare", "hihat", "clap", "tom", "ride", "crash", "openhat", "rim", "floorTom", "midTom", "lowTom", "shaker", "tambourine", "conga", "cowbell", "bongo", "maraca", "clave", "sidestick", "snap", "subkick", "synthkick", "reversekick", "crash2"],
+    hiddenDrums: [],
+    sequence: {
+      kick: [true, false, false, false, true, false, false, false, true, false, false, true, true, false, false, false],
+      snare: [false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false],
+      hihat: [true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false],
+      clap: [false, false, false, false, false, false, false, false, true, false, false, false, true, false, false, false],
+      ride: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+    },
+  },
+  {
+    id: "preset-latin-heat",
+    name: "Latin Heat",
+    bpm: 124,
+    steps: 16,
+    drumOrder: ["kick", "snare", "hihat", "clap", "tom", "ride", "crash", "openhat", "rim", "floorTom", "midTom", "lowTom", "shaker", "tambourine", "conga", "cowbell", "bongo", "maraca", "clave", "sidestick", "snap", "subkick", "synthkick", "reversekick", "crash2"],
+    hiddenDrums: [],
+    sequence: {
+      kick: [true, false, true, false, true, false, false, false, true, false, true, false, true, false, false, false],
+      snare: [false, false, false, false, false, false, true, false, false, false, false, false, true, false, false, false],
+      hihat: [true, false, true, false, true, true, false, true, true, false, true, false, true, true, false, true],
+      clap: [false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false],
+      conga: [false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false],
+      bongo: [false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, false],
+    },
+  },
+  {
+    id: "preset-deep-house",
+    name: "Deep House",
+    bpm: 122,
+    steps: 16,
+    drumOrder: ["kick", "snare", "hihat", "clap", "tom", "ride", "crash", "openhat", "rim", "floorTom", "midTom", "lowTom", "shaker", "tambourine", "conga", "cowbell", "bongo", "maraca", "clave", "sidestick", "snap", "subkick", "synthkick", "reversekick", "crash2"],
+    hiddenDrums: [],
+    sequence: {
+      kick: [true, false, false, false, true, false, false, false, true, false, false, false, true, false, false, true],
+      snare: [false, false, false, false, false, false, true, false, false, false, false, false, true, false, false, false],
+      hihat: [true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false],
+      clap: [false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false],
+      shaker: [false, false, false, false, false, false, true, false, false, false, false, false, true, false, false, false],
+      openhat: [false, false, false, false, false, true, false, false, false, false, false, true, false, false, false, false],
+    },
+  },
+  {
+    id: "preset-trap-bounce",
+    name: "Trap Bounce",
+    bpm: 140,
+    steps: 16,
+    drumOrder: ["kick", "snare", "hihat", "clap", "tom", "ride", "crash", "openhat", "rim", "floorTom", "midTom", "lowTom", "shaker", "tambourine", "conga", "cowbell", "bongo", "maraca", "clave", "sidestick", "snap", "subkick", "synthkick", "reversekick", "crash2"],
+    hiddenDrums: [],
+    sequence: {
+      kick: [true, false, false, false, true, false, false, true, true, false, false, false, true, false, false, true],
+      snare: [false, false, false, false, false, false, true, false, false, false, false, false, true, false, false, false],
+      hihat: [true, false, true, false, true, false, true, true, true, false, true, false, true, false, true, true],
+      clap: [false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false],
+      rim: [false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true],
+    },
+  },
+  {
+    id: "preset-stutter-pop",
+    name: "Stutter Pop",
+    bpm: 116,
+    steps: 16,
+    drumOrder: ["kick", "snare", "hihat", "clap", "tom", "ride", "crash", "openhat", "rim", "floorTom", "midTom", "lowTom", "shaker", "tambourine", "conga", "cowbell", "bongo", "maraca", "clave", "sidestick", "snap", "subkick", "synthkick", "reversekick", "crash2"],
+    hiddenDrums: [],
+    sequence: {
+      kick: [true, false, true, false, true, false, false, true, true, false, true, false, true, false, false, true],
+      snare: [false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false],
+      hihat: [true, true, true, true, true, false, true, true, true, true, true, false, true, true, true, true],
+      clap: [false, false, false, false, false, false, false, false, true, false, false, false, true, false, false, false],
+      ride: [false, false, false, false, false, true, false, false, false, false, false, true, false, false, false, false],
+    },
+  },
+  {
+    id: "preset-industrial-drive",
+    name: "Industrial Drive",
+    bpm: 132,
+    steps: 16,
+    drumOrder: ["kick", "snare", "hihat", "clap", "tom", "ride", "crash", "openhat", "rim", "floorTom", "midTom", "lowTom", "shaker", "tambourine", "conga", "cowbell", "bongo", "maraca", "clave", "sidestick", "snap", "subkick", "synthkick", "reversekick", "crash2"],
+    hiddenDrums: [],
+    sequence: {
+      kick: [true, false, false, false, true, false, false, true, true, false, false, false, true, false, true, false],
+      snare: [false, false, false, false, false, false, true, false, false, false, false, false, true, false, false, false],
+      hihat: [true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false],
+      floorTom: [false, false, false, false, true, false, false, false, false, false, true, false, false, false, true, false],
+      crash: [false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false],
+    },
+  },
+  {
+    id: "preset-disco-flash",
+    name: "Disco Flash",
+    bpm: 118,
+    steps: 16,
+    drumOrder: ["kick", "snare", "hihat", "clap", "tom", "ride", "crash", "openhat", "rim", "floorTom", "midTom", "lowTom", "shaker", "tambourine", "conga", "cowbell", "bongo", "maraca", "clave", "sidestick", "snap", "subkick", "synthkick", "reversekick", "crash2"],
+    hiddenDrums: [],
+    sequence: {
+      kick: [true, false, false, false, true, false, false, false, true, false, false, false, true, false, false, false],
+      snare: [false, false, false, false, false, false, true, false, false, false, false, false, true, false, false, false],
+      hihat: [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true],
+      clap: [false, false, false, false, false, false, false, false, true, false, false, false, true, false, false, false],
+      ride: [false, false, false, true, false, false, false, true, false, false, false, true, false, false, false, true],
+      crash: [false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false],
+    },
+  },
+  {
+    id: "preset-dnb-skank",
+    name: "DNB Skank",
+    bpm: 174,
+    steps: 16,
+    drumOrder: ["kick", "snare", "hihat", "clap", "tom", "ride", "crash", "openhat", "rim", "floorTom", "midTom", "lowTom", "shaker", "tambourine", "conga", "cowbell", "bongo", "maraca", "clave", "sidestick", "snap", "subkick", "synthkick", "reversekick", "crash2"],
+    hiddenDrums: [],
+    sequence: {
+      kick: [true, false, false, false, true, false, false, false, true, false, false, true, true, false, false, false],
+      snare: [false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false],
+      hihat: [true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false],
+      tom: [false, false, false, false, true, false, false, false, false, false, true, false, false, false, true, false],
+      ride: [false, true, false, false, false, true, false, false, false, true, false, false, false, true, false, false],
+    },
+  },
+  {
+    id: "preset-broken-beat",
+    name: "Broken Beat",
+    bpm: 100,
+    steps: 16,
+    drumOrder: ["kick", "snare", "hihat", "clap", "tom", "ride", "crash", "openhat", "rim", "floorTom", "midTom", "lowTom", "shaker", "tambourine", "conga", "cowbell", "bongo", "maraca", "clave", "sidestick", "snap", "subkick", "synthkick", "reversekick", "crash2"],
+    hiddenDrums: [],
+    sequence: {
+      kick: [true, false, false, true, true, false, false, true, true, false, false, true, true, false, false, true],
+      snare: [false, false, false, false, false, false, true, false, false, false, false, false, true, false, false, false],
+      hihat: [true, false, true, false, true, true, false, true, true, false, true, false, true, true, false, true],
+      clap: [false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false],
+      shaker: [false, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false],
+    },
+  },
+  {
+    id: "preset-night-drive",
+    name: "Night Drive",
+    bpm: 96,
+    steps: 16,
+    drumOrder: ["kick", "snare", "hihat", "clap", "tom", "ride", "crash", "openhat", "rim", "floorTom", "midTom", "lowTom", "shaker", "tambourine", "conga", "cowbell", "bongo", "maraca", "clave", "sidestick", "snap", "subkick", "synthkick", "reversekick", "crash2"],
+    hiddenDrums: [],
+    sequence: {
+      kick: [true, false, false, false, true, false, false, false, true, false, false, false, true, false, false, true],
+      snare: [false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false],
+      hihat: [true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false],
+      ride: [false, false, false, false, false, true, false, false, false, false, false, true, false, false, false, true],
+      crash: [false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false],
+    },
+  },
+  {
+    id: "preset-sunset-sway",
+    name: "Sunset Sway",
+    bpm: 106,
+    steps: 16,
+    drumOrder: ["kick", "snare", "hihat", "clap", "tom", "ride", "crash", "openhat", "rim", "floorTom", "midTom", "lowTom", "shaker", "tambourine", "conga", "cowbell", "bongo", "maraca", "clave", "sidestick", "snap", "subkick", "synthkick", "reversekick", "crash2"],
+    hiddenDrums: [],
+    sequence: {
+      kick: [true, false, false, false, true, false, false, false, true, false, true, false, true, false, false, true],
+      snare: [false, false, false, false, false, false, true, false, false, false, false, false, true, false, false, false],
+      hihat: [true, true, true, true, true, false, true, true, true, true, true, false, true, true, true, true],
+      clap: [false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false],
+      tambourine: [false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, true],
+    },
+  },
+  {
+    id: "preset-mojo-rush",
+    name: "Mojo Rush",
+    bpm: 128,
+    steps: 16,
+    drumOrder: ["kick", "snare", "hihat", "clap", "tom", "ride", "crash", "openhat", "rim", "floorTom", "midTom", "lowTom", "shaker", "tambourine", "conga", "cowbell", "bongo", "maraca", "clave", "sidestick", "snap", "subkick", "synthkick", "reversekick", "crash2"],
+    hiddenDrums: [],
+    sequence: {
+      kick: [true, false, false, true, true, false, false, true, true, false, false, true, true, false, false, true],
+      snare: [false, false, false, false, false, false, true, false, false, false, false, false, true, false, false, false],
+      hihat: [true, false, true, false, true, false, true, true, true, false, true, false, true, false, true, true],
+      clap: [false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false],
+      tom: [false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, false],
+    },
+  },
 ];
 const DRUM_LABELS = {
   kick: "Kick",
@@ -225,20 +430,73 @@ function getLibrarySongs() {
   return [...PRESET_SONGS, ...getCustomSongs()];
 }
 
+function isBasicPreset(song) {
+  const basicDrums = new Set(["kick", "snare", "hihat", "clap", "tom"]);
+
+  return Object.entries(song.sequence || {}).every(([drum, steps]) => {
+    if (!Array.isArray(steps)) {
+      return true;
+    }
+
+    if (!basicDrums.has(drum)) {
+      return steps.every((step) => !step);
+    }
+
+    return true;
+  });
+}
+
 function renderSongLibrary() {
-  const songs = getLibrarySongs();
   const selectedId = songSelect.value || "";
+  const presetSongs = PRESET_SONGS;
+  const customSongs = getCustomSongs();
+  const basicPresetSongs = presetSongs.filter((song) => isBasicPreset(song));
+  const advancedPresetSongs = presetSongs.filter((song) => !isBasicPreset(song));
 
-  songSelect.innerHTML = '<option value="">Choose a song</option>';
+  songSelect.innerHTML = "";
 
-  songs.forEach((song) => {
+  const defaultOption = document.createElement("option");
+  defaultOption.value = "";
+  defaultOption.textContent = "Choose a song";
+  songSelect.appendChild(defaultOption);
+
+  const basicPresetGroup = document.createElement("optgroup");
+  basicPresetGroup.label = "Basic Presets";
+
+  basicPresetSongs.forEach((song) => {
     const option = document.createElement("option");
     option.value = song.id;
     option.textContent = song.name;
-    songSelect.appendChild(option);
+    basicPresetGroup.appendChild(option);
   });
 
-  if (selectedId && songs.some((song) => song.id === selectedId)) {
+  songSelect.appendChild(basicPresetGroup);
+
+  const advancedPresetGroup = document.createElement("optgroup");
+  advancedPresetGroup.label = "Advanced Presets";
+
+  advancedPresetSongs.forEach((song) => {
+    const option = document.createElement("option");
+    option.value = song.id;
+    option.textContent = song.name;
+    advancedPresetGroup.appendChild(option);
+  });
+
+  songSelect.appendChild(advancedPresetGroup);
+
+  const customGroup = document.createElement("optgroup");
+  customGroup.label = "My Songs";
+
+  customSongs.forEach((song) => {
+    const option = document.createElement("option");
+    option.value = song.id;
+    option.textContent = song.name;
+    customGroup.appendChild(option);
+  });
+
+  songSelect.appendChild(customGroup);
+
+  if (selectedId && [...presetSongs, ...customSongs].some((song) => song.id === selectedId)) {
     songSelect.value = selectedId;
   } else {
     songSelect.value = "";
