@@ -26,6 +26,7 @@ const DRUM_NAMES = [
   "crash2",
 ];
 const SONG_LIBRARY_KEY = "drum-machine-custom-songs";
+const FAVORITE_SONGS_KEY = "drum-machine-favorite-songs";
 const PRESET_SONGS = [
   {
     id: "preset-classic-rock",
@@ -380,15 +381,20 @@ let isPlaying = false;
 let timerId = null;
 let nextStepTime = 0;
 let bpm = 110;
+let swing = 0;
 let audioContext = null;
 let draggedDrum = null;
 
 const playButton = document.getElementById("play-button");
+const themeToggle = document.getElementById("theme-toggle");
 const tempoInput = document.getElementById("tempo");
 const tempoValue = document.getElementById("tempo-value");
 const trackLengthInput = document.getElementById("track-length");
 const trackLengthValue = document.getElementById("track-length-value");
+const swingInput = document.getElementById("swing");
+const swingValue = document.getElementById("swing-value");
 const sequenceGrid = document.getElementById("sequence-grid");
+const favoriteButton = document.getElementById("favorite-preset-button");
 const songSelect = document.getElementById("song-select");
 const songNameInput = document.getElementById("song-name");
 const saveSongButton = document.getElementById("save-song-button");
@@ -424,6 +430,19 @@ function getCustomSongs() {
 
 function saveCustomSongs(songs) {
   localStorage.setItem(SONG_LIBRARY_KEY, JSON.stringify(songs));
+}
+
+function getFavoriteSongIds() {
+  try {
+    const stored = JSON.parse(localStorage.getItem(FAVORITE_SONGS_KEY) || "[]");
+    return Array.isArray(stored) ? stored : [];
+  } catch (error) {
+    return [];
+  }
+}
+
+function saveFavoriteSongIds(songIds) {
+  localStorage.setItem(FAVORITE_SONGS_KEY, JSON.stringify(songIds));
 }
 
 function getLibrarySongs() {
@@ -467,12 +486,46 @@ function resetPresetSelection() {
   refreshSongActionState();
 }
 
+function updateFavoriteButton() {
+  if (!favoriteButton) {
+    return;
+  }
+
+  const selectedId = songSelect.value || "";
+  const favoriteIds = new Set(getFavoriteSongIds());
+  const isFavorite = Boolean(selectedId && favoriteIds.has(selectedId));
+  favoriteButton.classList.toggle("is-favorite", isFavorite);
+  favoriteButton.textContent = isFavorite ? "★" : "☆";
+  favoriteButton.setAttribute("aria-pressed", String(isFavorite));
+  favoriteButton.disabled = !selectedId;
+}
+
+function toggleFavoriteSong() {
+  const selectedId = songSelect.value;
+  if (!selectedId) {
+    return;
+  }
+
+  const favoriteIds = new Set(getFavoriteSongIds());
+  if (favoriteIds.has(selectedId)) {
+    favoriteIds.delete(selectedId);
+  } else {
+    favoriteIds.add(selectedId);
+  }
+
+  saveFavoriteSongIds([...favoriteIds]);
+  renderSongLibrary();
+  updateFavoriteButton();
+}
+
 function renderSongLibrary() {
   const selectedId = songSelect.value || "";
   const presetSongs = PRESET_SONGS;
   const customSongs = getCustomSongs();
-  const basicPresetSongs = presetSongs.filter((song) => isBasicPreset(song));
-  const advancedPresetSongs = presetSongs.filter((song) => !isBasicPreset(song));
+  const favoriteIds = new Set(getFavoriteSongIds());
+  const favoritePresetSongs = presetSongs.filter((song) => favoriteIds.has(song.id));
+  const basicPresetSongs = presetSongs.filter((song) => isBasicPreset(song) && !favoriteIds.has(song.id));
+  const advancedPresetSongs = presetSongs.filter((song) => !isBasicPreset(song) && !favoriteIds.has(song.id));
 
   songSelect.innerHTML = "";
 
@@ -480,6 +533,20 @@ function renderSongLibrary() {
   defaultOption.value = "";
   defaultOption.textContent = "Choose a song";
   songSelect.appendChild(defaultOption);
+
+  if (favoritePresetSongs.length) {
+    const favoriteGroup = document.createElement("optgroup");
+    favoriteGroup.label = "Favorites";
+
+    favoritePresetSongs.forEach((song) => {
+      const option = document.createElement("option");
+      option.value = song.id;
+      option.textContent = song.name;
+      favoriteGroup.appendChild(option);
+    });
+
+    songSelect.appendChild(favoriteGroup);
+  }
 
   const basicPresetGroup = document.createElement("optgroup");
   basicPresetGroup.label = "Basic Presets";
@@ -524,6 +591,7 @@ function renderSongLibrary() {
   }
 
   refreshSongActionState();
+  updateFavoriteButton();
 }
 
 function loadSongIntoMachine(song) {
@@ -807,12 +875,32 @@ function loadSongFromUrl() {
   }
 }
 
+function applyTheme(theme) {
+  const nextTheme = theme === "light" ? "light" : "dark";
+  document.body.dataset.theme = nextTheme;
+  localStorage.setItem("drum-machine-theme", nextTheme);
+
+  if (themeToggle) {
+    themeToggle.textContent = nextTheme === "dark" ? "☾" : "☀";
+    themeToggle.setAttribute("aria-label", nextTheme === "dark" ? "Switch to light mode" : "Switch to dark mode");
+    themeToggle.title = nextTheme === "dark" ? "Switch to light mode" : "Switch to dark mode";
+  }
+}
+
 function updateTempoLabel() {
   tempoValue.textContent = String(bpm);
 }
 
 function updateTrackLengthLabel() {
   trackLengthValue.textContent = String(STEP_COUNT);
+
+  document.querySelectorAll(".length-preset").forEach((button) => {
+    button.classList.toggle("active", Number(button.dataset.length) === STEP_COUNT);
+  });
+}
+
+function updateSwingLabel() {
+  swingValue.textContent = `${Math.round(swing)}%`;
 }
 
 function resizeSequence(newLength) {
@@ -835,6 +923,7 @@ function resizeSequence(newLength) {
 
   selectedStep = Math.min(selectedStep, STEP_COUNT - 1);
   currentStep = Math.min(currentStep, STEP_COUNT - 1);
+  trackLengthInput.value = String(STEP_COUNT);
   updateTrackLengthLabel();
 }
 
@@ -1694,7 +1783,9 @@ function advanceStep() {
 
   const context = ensureAudioContext();
   const stepDurationSeconds = 60 / bpm / 4;
-  const scheduledTime = nextStepTime || context.currentTime + 0.01;
+  const baseTime = nextStepTime || context.currentTime + 0.01;
+  const swingAmount = currentStep % 2 === 1 && swing > 0 ? stepDurationSeconds * (swing / 100) : 0;
+  const scheduledTime = baseTime + swingAmount;
 
   for (const drum of DRUM_NAMES) {
     if (hiddenDrums.has(drum)) {
@@ -1755,11 +1846,16 @@ function startPlayback() {
   advanceStep();
 }
 
+favoriteButton.addEventListener("click", () => {
+  toggleFavoriteSong();
+});
+
 songSelect.addEventListener("change", () => {
   const selectedId = songSelect.value;
   if (!selectedId) {
     songNameInput.value = "";
     refreshSongActionState();
+    updateFavoriteButton();
     return;
   }
 
@@ -1770,6 +1866,7 @@ songSelect.addEventListener("change", () => {
   }
 
   refreshSongActionState();
+  updateFavoriteButton();
 });
 
 saveSongButton.addEventListener("click", () => {
@@ -1800,6 +1897,13 @@ playButton.addEventListener("click", () => {
 
   startPlayback();
 });
+
+if (themeToggle) {
+  themeToggle.addEventListener("click", () => {
+    const nextTheme = document.body.dataset.theme === "light" ? "dark" : "light";
+    applyTheme(nextTheme);
+  });
+}
 
 document.addEventListener("keydown", (event) => {
   if (event.code !== "Space") {
@@ -1838,6 +1942,26 @@ trackLengthInput.addEventListener("input", (event) => {
   render();
 });
 
+swingInput.addEventListener("input", (event) => {
+  swing = Number(event.target.value);
+  updateSwingLabel();
+  resetPresetSelection();
+});
+
+document.querySelectorAll(".length-preset").forEach((button) => {
+  button.addEventListener("click", () => {
+    const nextLength = Number(button.dataset.length);
+    if (!nextLength) {
+      return;
+    }
+
+    trackLengthInput.value = String(nextLength);
+    resizeSequence(nextLength);
+    resetPresetSelection();
+    render();
+  });
+});
+
 songNameInput.addEventListener("input", () => {
   if (!songSelect.value || songSelect.value.startsWith("custom-")) {
     return;
@@ -1848,9 +1972,14 @@ songNameInput.addEventListener("input", () => {
   refreshSongActionState();
 });
 
+const savedTheme = localStorage.getItem("drum-machine-theme") || "dark";
+applyTheme(savedTheme);
+
 updateTempoLabel();
 updateTrackLengthLabel();
+updateSwingLabel();
 renderSongLibrary();
 refreshSongActionState();
+updateFavoriteButton();
 loadSongFromUrl();
 render();

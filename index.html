@@ -16,6 +16,7 @@
 
         <div class="controls">
           <button id="play-button" class="play-button" type="button">Play</button>
+          <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Switch to dark mode" title="Switch theme">☾</button>
 
           <label class="tempo-control" for="tempo">
             <span>BPM</span>
@@ -23,10 +24,25 @@
             <output id="tempo-value" for="tempo">110</output>
           </label>
 
-          <label class="length-control" for="track-length">
-            <span>Steps</span>
-            <input id="track-length" type="range" min="8" max="64" step="4" value="16" />
-            <output id="track-length-value" for="track-length">16</output>
+          <div class="length-group">
+            <label class="length-control" for="track-length">
+              <span>Steps</span>
+              <input id="track-length" type="range" min="8" max="64" step="4" value="16" />
+              <output id="track-length-value" for="track-length">16</output>
+            </label>
+
+            <div class="length-preset-row" aria-label="Pattern length presets">
+              <button class="length-preset" type="button" data-length="8">8</button>
+              <button class="length-preset active" type="button" data-length="16">16</button>
+              <button class="length-preset" type="button" data-length="32">32</button>
+              <button class="length-preset" type="button" data-length="64">64</button>
+            </div>
+          </div>
+
+          <label class="swing-control" for="swing">
+            <span>Swing</span>
+            <input id="swing" type="range" min="0" max="50" value="0" />
+            <output id="swing-value" for="swing">0%</output>
           </label>
         </div>
       </header>
@@ -40,6 +56,7 @@
             </select>
           </label>
 
+          <button id="favorite-preset-button" class="favorite-button" type="button" aria-label="Favorite preset" title="Favorite preset">☆</button>
           <input id="song-name" type="text" class="song-name-input" maxlength="32" placeholder="Song name" />
         </div>
 
