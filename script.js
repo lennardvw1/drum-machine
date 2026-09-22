@@ -446,6 +446,27 @@ function isBasicPreset(song) {
   });
 }
 
+function isCustomSongSelected() {
+  const selectedId = songSelect.value;
+  return Boolean(selectedId && getCustomSongs().some((song) => song.id === selectedId));
+}
+
+function refreshSongActionState() {
+  deleteSongButton.hidden = !isCustomSongSelected();
+}
+
+function resetPresetSelection() {
+  const selectedId = songSelect.value;
+  if (!selectedId || selectedId.startsWith("custom-")) {
+    return;
+  }
+
+  songSelect.value = "";
+  songNameInput.value = "";
+  renderSongLibrary();
+  refreshSongActionState();
+}
+
 function renderSongLibrary() {
   const selectedId = songSelect.value || "";
   const presetSongs = PRESET_SONGS;
@@ -501,6 +522,8 @@ function renderSongLibrary() {
   } else {
     songSelect.value = "";
   }
+
+  refreshSongActionState();
 }
 
 function loadSongIntoMachine(song) {
@@ -606,17 +629,99 @@ function fromUrlSafeBase64(value) {
   return decodeURIComponent(escape(atob(base64)));
 }
 
+function encodeBitPattern(bits) {
+  const padded = Array.from({ length: Math.ceil(bits.length / 8) * 8 }, (_, index) => Boolean(bits[index]));
+  const bytes = [];
+
+  for (let i = 0; i < padded.length; i += 8) {
+    let byte = 0;
+    for (let bit = 0; bit < 8; bit += 1) {
+      const bitIndex = i + bit;
+      byte = (byte << 1) | Number(Boolean(padded[bitIndex]));
+    }
+    bytes.push(byte);
+  }
+
+  return btoa(String.fromCharCode(...bytes))
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=+$/g, "");
+}
+
+function decodeBitPattern(value, steps) {
+  if (!value) {
+    return Array(steps).fill(false);
+  }
+
+  const padded = value + "=".repeat((4 - (value.length % 4)) % 4);
+  const base64 = padded.replace(/-/g, "+").replace(/_/g, "/");
+  const bytes = Uint8Array.from(atob(base64), (char) => char.charCodeAt(0));
+  const bits = [];
+
+  bytes.forEach((byte) => {
+    for (let bit = 7; bit >= 0; bit -= 1) {
+      bits.push(Boolean((byte >> bit) & 1));
+    }
+  });
+
+  return bits.slice(0, steps);
+}
+
+function encodeDrumBitmask(drums) {
+  const bitmask = Array(DRUM_NAMES.length).fill(false);
+  drums.forEach((drum) => {
+    const index = DRUM_NAMES.indexOf(drum);
+    if (index >= 0) {
+      bitmask[index] = true;
+    }
+  });
+
+  return encodeBitPattern(bitmask);
+}
+
+function decodeDrumBitmask(value) {
+  const bits = decodeBitPattern(value, DRUM_NAMES.length);
+  return DRUM_NAMES.filter((_, index) => bits[index]);
+}
+
+function encodeDrumOrder(order) {
+  if (order.length === DRUM_NAMES.length && order.every((drum, index) => drum === DRUM_NAMES[index])) {
+    return "";
+  }
+
+  const bytes = Uint8Array.from(order.map((drum) => DRUM_NAMES.indexOf(drum)).filter((index) => index >= 0));
+  return btoa(String.fromCharCode(...bytes))
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=+$/g, "");
+}
+
+function decodeDrumOrder(value) {
+  if (!value) {
+    return [...DRUM_NAMES];
+  }
+
+  const padded = value + "=".repeat((4 - (value.length % 4)) % 4);
+  const base64 = padded.replace(/-/g, "+").replace(/_/g, "/");
+  const bytes = Uint8Array.from(atob(base64), (char) => char.charCodeAt(0));
+  const order = Array.from(bytes, (byte) => DRUM_NAMES[byte]).filter(Boolean);
+  return order.length ? order : [...DRUM_NAMES];
+}
+
 function getCurrentSongLink() {
+  const activeDrums = [...drumOrder].filter((drum) => sequence[drum].some(Boolean));
+  const patternData = activeDrums
+    .map((drum) => `${DRUM_NAMES.indexOf(drum)}:${encodeBitPattern(sequence[drum].slice(0, STEP_COUNT))}`)
+    .join(".");
+
   const compactPayload = [
-    "v1",
+    "v2",
     getUrlSafeBase64(songNameInput.value.trim() || "My Song"),
     String(bpm),
     String(STEP_COUNT),
-    [...hiddenDrums].join(","),
-    [...drumOrder].join(","),
-    [...drumOrder]
-      .map((drum) => sequence[drum].slice(0, STEP_COUNT).map((step) => (step ? "1" : "0")).join(""))
-      .join("|"),
+    encodeDrumBitmask(hiddenDrums),
+    encodeDrumOrder(drumOrder),
+    patternData,
   ].join(":");
 
   return `${window.location.href.split("#")[0]}#${compactPayload}`;
@@ -629,6 +734,42 @@ function loadSongFromUrl() {
   }
 
   try {
+    if (hash.startsWith("v2:")) {
+      const [version, encodedName, bpmValue, stepsValue, hiddenValue, orderValue, patternValue] = hash.split(":");
+      if (version !== "v2") {
+        throw new Error("Unsupported compact share format");
+      }
+
+      const name = fromUrlSafeBase64(encodedName || "");
+      const nextSteps = Number(stepsValue) || STEP_COUNT;
+      const order = decodeDrumOrder(orderValue || "");
+      const hidden = decodeDrumBitmask(hiddenValue || "");
+      const sequenceMap = Object.fromEntries(DRUM_NAMES.map((drum) => [drum, Array(nextSteps).fill(false)]));
+
+      (patternValue || "")
+        .split(".")
+        .filter(Boolean)
+        .forEach((entry) => {
+          const [indexValue, patternBits] = entry.split(":");
+          const drumIndex = Number(indexValue);
+          const drumName = DRUM_NAMES[drumIndex];
+          if (!drumName || !patternBits) {
+            return;
+          }
+          sequenceMap[drumName] = decodeBitPattern(patternBits, nextSteps);
+        });
+
+      loadSongIntoMachine({
+        name,
+        bpm: Number(bpmValue) || bpm,
+        steps: nextSteps,
+        hiddenDrums: hidden,
+        drumOrder: order,
+        sequence: sequenceMap,
+      });
+      return;
+    }
+
     if (hash.startsWith("v1:")) {
       const [version, encodedName, bpmValue, stepsValue, hiddenValue, orderValue, masksValue] = hash.split(":");
       if (version !== "v1") {
@@ -728,6 +869,7 @@ function toggleDrumVisibility(drum) {
     hiddenDrums.add(drum);
   }
 
+  resetPresetSelection();
   render();
 }
 
@@ -738,6 +880,8 @@ function refreshCellVisualState(cell, drum, step) {
 }
 
 function toggleStep(drum, step) {
+  resetPresetSelection();
+
   const context = ensureAudioContext();
   const isOn = sequence[drum][step];
 
@@ -758,6 +902,7 @@ function toggleStep(drum, step) {
 }
 
 function triggerCellRightClick(drum, step) {
+  resetPresetSelection();
   sequence[drum][step] = false;
 
   const targetCell = sequenceGrid.querySelector(`.step-cell[data-drum="${drum}"][data-step="${step}"]`);
@@ -1614,6 +1759,7 @@ songSelect.addEventListener("change", () => {
   const selectedId = songSelect.value;
   if (!selectedId) {
     songNameInput.value = "";
+    refreshSongActionState();
     return;
   }
 
@@ -1622,6 +1768,8 @@ songSelect.addEventListener("change", () => {
     loadSongIntoMachine(matchingSong);
     songNameInput.value = matchingSong.name;
   }
+
+  refreshSongActionState();
 });
 
 saveSongButton.addEventListener("click", () => {
@@ -1675,6 +1823,7 @@ document.addEventListener("keydown", (event) => {
 tempoInput.addEventListener("input", (event) => {
   bpm = Number(event.target.value);
   updateTempoLabel();
+  resetPresetSelection();
 
   if (isPlaying) {
     nextStepTime = 0;
@@ -1685,11 +1834,23 @@ tempoInput.addEventListener("input", (event) => {
 trackLengthInput.addEventListener("input", (event) => {
   const nextLength = Number(event.target.value);
   resizeSequence(nextLength);
+  resetPresetSelection();
   render();
+});
+
+songNameInput.addEventListener("input", () => {
+  if (!songSelect.value || songSelect.value.startsWith("custom-")) {
+    return;
+  }
+
+  songSelect.value = "";
+  renderSongLibrary();
+  refreshSongActionState();
 });
 
 updateTempoLabel();
 updateTrackLengthLabel();
 renderSongLibrary();
+refreshSongActionState();
 loadSongFromUrl();
 render();
