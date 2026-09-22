@@ -70,6 +70,25 @@ body[data-theme="light"] .app-shell {
   background: rgba(255, 255, 255, 0.92);
 }
 
+.secret-trigger {
+  position: fixed;
+  top: 6px;
+  left: 6px;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  background: transparent;
+  box-shadow: none;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 9999;
+  pointer-events: auto;
+  touch-action: manipulation;
+}
+
 .topbar {
   display: flex;
   justify-content: space-between;
