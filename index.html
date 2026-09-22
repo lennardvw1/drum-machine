@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Drum Machine</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Beat Builder</p>
+          <h1>Drum Machine</h1>
+        </div>
+
+        <div class="controls">
+          <button id="play-button" class="play-button" type="button">Play</button>
+
+          <label class="tempo-control" for="tempo">
+            <span>BPM</span>
+            <input id="tempo" type="range" min="60" max="180" value="110" />
+            <output id="tempo-value" for="tempo">110</output>
+          </label>
+
+          <label class="length-control" for="track-length">
+            <span>Steps</span>
+            <input id="track-length" type="range" min="8" max="64" step="4" value="16" />
+            <output id="track-length-value" for="track-length">16</output>
+          </label>
+        </div>
+      </header>
+
+      <section class="pad-panel" aria-label="Instrument pads">
+        <button class="drum-pad kick" type="button" data-drum="kick"><span class="pad-name">Kick</span><span class="pad-hint">Add to selected step</span></button>
+        <button class="drum-pad snare" type="button" data-drum="snare"><span class="pad-name">Snare</span><span class="pad-hint">Add to selected step</span></button>
+        <button class="drum-pad hihat" type="button" data-drum="hihat"><span class="pad-name">Hi-Hat</span><span class="pad-hint">Add to selected step</span></button>
+        <button class="drum-pad clap" type="button" data-drum="clap"><span class="pad-name">Clap</span><span class="pad-hint">Add to selected step</span></button>
+        <button class="drum-pad tom" type="button" data-drum="tom"><span class="pad-name">Tom</span><span class="pad-hint">Add to selected step</span></button>
+        <button class="drum-pad ride" type="button" data-drum="ride"><span class="pad-name">Ride</span><span class="pad-hint">Add to selected step</span></button>
+        <button class="drum-pad crash" type="button" data-drum="crash"><span class="pad-name">Crash</span><span class="pad-hint">Add to selected step</span></button>
+        <button class="drum-pad openhat" type="button" data-drum="openhat"><span class="pad-name">Open Hat</span><span class="pad-hint">Add to selected step</span></button>
+        <button class="drum-pad rim" type="button" data-drum="rim"><span class="pad-name">Rim</span><span class="pad-hint">Add to selected step</span></button>
+        <button class="drum-pad floorTom" type="button" data-drum="floorTom"><span class="pad-name">Floor Tom</span><span class="pad-hint">Add to selected step</span></button>
+        <button class="drum-pad midTom" type="button" data-drum="midTom"><span class="pad-name">Mid Tom</span><span class="pad-hint">Add to selected step</span></button>
+        <button class="drum-pad lowTom" type="button" data-drum="lowTom"><span class="pad-name">Low Tom</span><span class="pad-hint">Add to selected step</span></button>
+        <button class="drum-pad shaker" type="button" data-drum="shaker"><span class="pad-name">Shaker</span><span class="pad-hint">Add to selected step</span></button>
+        <button class="drum-pad tambourine" type="button" data-drum="tambourine"><span class="pad-name">Tambourine</span><span class="pad-hint">Add to selected step</span></button>
+        <button class="drum-pad conga" type="button" data-drum="conga"><span class="pad-name">Conga</span><span class="pad-hint">Add to selected step</span></button>
+        <button class="drum-pad cowbell" type="button" data-drum="cowbell"><span class="pad-name">Cowbell</span><span class="pad-hint">Add to selected step</span></button>
+        <button class="drum-pad bongo" type="button" data-drum="bongo"><span class="pad-name">Bongo</span><span class="pad-hint">Add to selected step</span></button>
+        <button class="drum-pad maraca" type="button" data-drum="maraca"><span class="pad-name">Maraca</span><span class="pad-hint">Add to selected step</span></button>
+        <button class="drum-pad clave" type="button" data-drum="clave"><span class="pad-name">Clave</span><span class="pad-hint">Add to selected step</span></button>
+        <button class="drum-pad sidestick" type="button" data-drum="sidestick"><span class="pad-name">Side Stick</span><span class="pad-hint">Add to selected step</span></button>
+        <button class="drum-pad snap" type="button" data-drum="snap"><span class="pad-name">Snap</span><span class="pad-hint">Add to selected step</span></button>
+        <button class="drum-pad subkick" type="button" data-drum="subkick"><span class="pad-name">Sub Kick</span><span class="pad-hint">Add to selected step</span></button>
+        <button class="drum-pad synthkick" type="button" data-drum="synthkick"><span class="pad-name">Synth Kick</span><span class="pad-hint">Add to selected step</span></button>
+        <button class="drum-pad reversekick" type="button" data-drum="reversekick"><span class="pad-name">Reverse Kick</span><span class="pad-hint">Add to selected step</span></button>
+        <button class="drum-pad crash2" type="button" data-drum="crash2"><span class="pad-name">Crash 2</span><span class="pad-hint">Add to selected step</span></button>
+      </section>
+
+      <section class="step-panel" aria-label="Current step selection">
+        <div class="selected-step-label">Selected step: <span id="selected-step">1</span></div>
+        <div id="step-selector" class="step-selector" aria-label="Step selector"></div>
+      </section>
+
+      <section class="sequencer-panel" aria-label="Sequence editor">
+        <div id="sequence-grid" class="sequence-grid"></div>
+      </section>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
